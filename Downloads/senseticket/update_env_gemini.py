@@ -4,7 +4,7 @@ import os
 def update_env():
     print("🔧 Updating .env file with Gemini API Key...")
     
-    gemini_key = "AIzaSyAVTcbc_ZY9nrHNcdXxOcNr6HT2vSV6NHo"
+    gemini_key = ""
     
     content = ""
     try:
