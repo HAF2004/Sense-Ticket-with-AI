@@ -1,0 +1,8 @@
+[INFO] Testing Google Gemini API connection...
+[INFO] API Key found: AIzaSyAVTc...
+
+[INFO] Sending query: 'Jelaskan secara singkat apa itu Discord dalam 1 kalimat.'
+
+[SUCCESS] API Connection SUCCESS!
+Response:
+discord itu kayak markas online buat kita ngobrol, kumpul, dan seru-seruan bareng, sayang~

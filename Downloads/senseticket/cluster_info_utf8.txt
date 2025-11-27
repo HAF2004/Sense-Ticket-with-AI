@@ -1,0 +1,16 @@
+﻿Running clustering analysis...
+
+Cluster Summary (Average values per feature):
+Feature              | Cluster 0 (Red)      | Cluster 1 (Blue)     | Cluster 2 (Yellow)  
+------------------------------------------------------------------------------------------
+General              | 6.71                 | 47.00                | 55.26               
+action_count         | 0.00                 | 11.00                | 0.00                
+cluster              | 0.00                 | 0.00                 | 0.00                
+
+Interpretation:
+Cluster 0 (Red):
+  - Highest feature: General (6.71)
+Cluster 1 (Blue):
+  - Highest feature: General (47.00)
+Cluster 2 (Yellow):
+  - Highest feature: General (55.26)

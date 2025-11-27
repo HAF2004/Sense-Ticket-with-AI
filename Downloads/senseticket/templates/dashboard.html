@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENSE Bot Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-900 text-white font-sans">
+    <div class="container mx-auto p-6">
+        <header class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-green-400">SENSE Bot Dashboard</h1>
+                <p class="text-gray-400">Monitoring & Analysis</p>
+            </div>
+            <div class="text-right">
+                <p class="text-sm text-gray-500">Status:
+                    <span
+                        class="{% if stats.bot_status == 'Online' %}text-green-500{% else %}text-red-500{% endif %} font-bold">
+                        {{ stats.bot_status }}
+                    </span>
+                </p>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-gray-400 text-sm uppercase">Total Conversations</h3>
+                <p class="text-4xl font-bold mt-2">{{ stats.total_conversations }}</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-gray-400 text-sm uppercase">Total Actions</h3>
+                <p class="text-4xl font-bold mt-2">{{ stats.total_actions }}</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h3 class="text-gray-400 text-sm uppercase">Unique Users</h3>
+                <p class="text-4xl font-bold mt-2">{{ stats.unique_users }}</p>
+            </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4 text-purple-400">User Clustering Analysis</h2>
+                <p class="text-gray-400 text-sm mb-4">Grouping users based on behavior patterns (K-Means).</p>
+
+                {% if clustering %}
+                <canvas id="clusterChart"></canvas>
+                <script>
+                    const clusterData = {
+                        labels: {{ clustering['labels'] | tojson }},
+                    datasets: [{
+                        label: 'Users per Cluster',
+                        data: {{ clustering['values'] | tojson }},
+                        backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                    ],
+                        borderColor: 'rgba(0,0,0,0.5)',
+                        borderWidth: 1
+                        }]
+                    };
+
+                    new Chart(document.getElementById('clusterChart'), {
+                        type: 'doughnut',
+                        data: clusterData,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: 'white' }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'User Behavior Groups',
+                                    color: 'white'
+                                }
+                            }
+                        }
+                    });
+                </script>
+                {% else %}
+                <div class="text-center py-10 text-gray-400">
+                    <p>Not enough data for clustering analysis.</p>
+                    <p class="text-sm mt-2">Need at least 3 users with different activity patterns.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4 text-blue-400">Recent Activity</h2>
+                <div class="overflow-y-auto max-h-96">
+                    <table class="w-full text-left text-sm text-gray-400">
+                        <thead class="bg-gray-700 text-gray-200 uppercase sticky top-0">
+                            <tr>
+                                <th class="px-4 py-2">User</th>
+                                <th class="px-4 py-2">Message</th>
+                                <th class="px-4 py-2">Category</th>
+                                <th class="px-4 py-2">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700">
+                            {% for conv in recent_conversations %}
+                            <tr class="hover:bg-gray-750">
+                                <td class="px-4 py-2 font-medium text-white">{{ conv.user_id }}</td>
+                                <td class="px-4 py-2 truncate max-w-xs">{{ conv.content }}</td>
+                                <td class="px-4 py-2">
+                                    <span class="px-2 py-1 rounded text-xs font-bold
+                                        {% if conv.category == 'AI' %} bg-purple-900 text-purple-300
+                                        {% else %} bg-gray-700 text-gray-300 {% endif %}">
+                                        {{ conv.category }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-2 text-xs">{{ conv.timestamp }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
